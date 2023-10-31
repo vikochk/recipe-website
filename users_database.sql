@@ -9,7 +9,7 @@ END $$;
 -- Переключиться на базу данных "users"
 SET search_path TO users;
 
--- Создать таблицу "users" в схеме "public", если она не существует
+-- Пользователь зарегистрированный
 CREATE TABLE IF NOT EXISTS public.users (
     user_id SERIAL PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -17,5 +17,27 @@ CREATE TABLE IF NOT EXISTS public.users (
     name VARCHAR(100) NOT NULL
 );
 
-SELECT * FROM public.users
+-- Ингредиенты, которые можно добавить
+CREATE TABLE IF NOT EXISTS public.ingredients (
+    ingredient_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL,
+    category VARCHAR(100)
+);
+
+-- Связка между users и холодильников
+CREATE TABLE IF NOT EXISTS public.user_fridges (
+    fridge_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES public.users(user_id)
+);
+
+-- Ингредиенты конкретного холодильника
+CREATE TABLE IF NOT EXISTS public.fridge_ingredients (
+    fridge_ingredient_id SERIAL PRIMARY KEY,
+    fridge_id INT REFERENCES public.user_fridges(fridge_id),
+    ingredient_id INT REFERENCES public.ingredients(ingredient_id),
+    quantity INT
+);
+
+
+SELECT * FROM public.fridge_ingredients
 
