@@ -1,81 +1,108 @@
-$(function() {
+$(document).ready(function () {
+
+    // Обработчик нажатия на кнопку "Редактировать холодильник"
+    $("#editFridgeBtn").on("click", function () {
+        // Скрыть текущий список ингредиентов
+        // Добавьте код для скрытия или удаления текущего списка ингредиентов
+
+        // Отобразить форму редактирования
+        $("#editFridgeForm").show();
+    });
+    // Автозаполнение
     $(".autocomplete").autocomplete({
-        source: function(request, response) {
+        source: function (request, response) {
             $.ajax({
                 url: "search.php",
                 dataType: "json",
                 data: {
                     ingredient: request.term
                 },
-                success: function(data) {
-                    response($.map(data, function(item) {
+                success: function (data) {
+                    response($.map(data, function (item) {
                         return {
                             label: item.name,
-                            value: item.name
+                            value: item.id
                         };
                     }));
                 }
             });
         },
         minLength: 2,
-        select: function(event, ui) {
-            // Заполняем скрытое поле с id выбранного ингредиента
-            $("#selected_ingredient_id").val(ui.item.label);
+        select: function (event, ui) {
+            $("#selected_ingredient_id").val(ui.item.value);
         }
+    });
+
+    $("#addToFridgeBtn").on("click", function (event) {
+        event.preventDefault();
+
+        // Очищаем контейнер сообщения
+        $("#messageContainer").html('');
+
+        $.ajax({
+            type: "POST",
+            url: "add_to_fridge.php",
+            data: $("#yourFormId").serialize(),
+            success: function (response) {
+                var data = JSON.parse(response);
+                if (data.success) {
+                    // Выводим сообщение об успехе
+                    $("#messageContainer").html('<div style="color: green;">' + data.message + '</div>');
+                } else {
+                    // Выводим сообщение об ошибке
+                    $("#messageContainer").html('<div style="color: red;">' + data.message + '</div>');
+                }
+            },
+            error: function () {
+                console.error('Ошибка при отправке данных на сервер');
+            }
+        });
     });
 });
 
-// Функция для отправки асинхронного запроса на сервер
-function searchIngredients(query) {
-    const resultsContainer = document.getElementById('results');
 
-    // Создаем новый XMLHttpRequest объект
-    const xhr = new XMLHttpRequest();
 
-    // Настраиваем запрос
-    xhr.open('GET', `search.php?ingredient=${encodeURIComponent(query)}`, true);
-
-    // Устанавливаем обработчик события для ответа
-    xhr.onload = function () {
-        if (xhr.status === 200) {
-            // Обработка JSON-ответа
-            const results = JSON.parse(xhr.responseText);
-
-            // Очищаем контейнер результатов
-            resultsContainer.innerHTML = '';
-
-            // Вывод результатов
-            results.forEach(result => {
-                resultsContainer.innerHTML += `<div>${result.name}</div>`;
-            });
-        } else {
-            console.error('Ошибка запроса:', xhr.statusText);
-        }
+function addToFridge() {
+    // Очищаем контейнер сообщения
+    $("#messageContainer").html('');
+    // Получаем значения из формы
+    var ingredientId = $("#selected_ingredient_id").val();
+    var formData = {
+        ingredient_id: ingredientId
     };
 
-    // Отправляем запрос на сервер
-    xhr.send();
+    // Отправляем асинхронный запрос на сервер
+    $.ajax({
+        type: "POST",
+        url: "add_to_fridge.php",
+        data: formData,
+        dataType: "json",
+        success: function (data) {
+            if (data.success) {
+                // Выводим сообщение об успехе
+                $("#messageContainer").html('<div style="color: green;">' + data.message + '</div>');
+
+                // Очищаем поле ввода
+                $("#addIngredient").val('');
+            } else {
+                // Выводим сообщение об ошибке
+                if (data.notFound) {
+                    // Ингредиент не найден в базе данных
+                    $("#messageContainer").html('<div style="color: orange;">' + data.message + '</div>');
+                } else {
+                    // Ошибка при добавлении ингредиента
+                    $("#messageContainer").html('<div style="color: red;">' + data.message + '</div>');
+                }
+
+                // Очищаем поле ввода в случае ошибки
+                $("#addIngredient").val('');
+            }
+        },
+        error: function () {
+            console.error('Ошибка при отправке данных на сервер');
+        }
+    });
+
+    // Предотвращаем стандартное действие формы (перенаправление)
+    return false;
 }
-
-// Функция для обновления результатов поиска при вводе
-function updateResults() {
-    const searchInput = document.getElementById('ingredient');
-    const query = searchInput.value;
-
-    // Вызываем функцию поиска только если введенное значение не пустое
-    if (query.trim() !== '') {
-        searchIngredients(query);
-    } else {
-        // Если введенное значение пустое, очищаем результаты поиска
-        const resultsContainer = document.getElementById('results');
-        resultsContainer.innerHTML = '';
-    }
-}
-// Функция для обработки выбора ингредиента из результатов поиска
-function selectIngredient(ingredientId, ingredientName) {
-    document.getElementById('selected_ingredient_id').value = ingredientId;
-    document.getElementById('ingredient').value = ingredientName;
-    document.getElementById('results').innerHTML = ''; // Очищаем результаты поиска
-}
-
-
