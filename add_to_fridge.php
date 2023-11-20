@@ -12,16 +12,14 @@ if (!isset($_SESSION['user_id'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ingredient_id = $_POST['ingredient_id'];
-    $quantity = $_POST['quantity'];
 
-// Получение ID пользователя из сессии
+    // Получение ID пользователя из сессии
     $user_id = $_SESSION['user_id'];
 
     // Проверка, существует ли ингредиент в холодильнике
-    $checkStmt = $db->prepare("SELECT 1 FROM fridge_ingredients WHERE fridge_id = (SELECT fridge_id FROM user_fridges WHERE user_id = :user_id) AND ingredient_id = (SELECT ingredient_id FROM ingredients WHERE name = :ingredient_name)");
+    $checkStmt = $db->prepare("SELECT 1 FROM fridge_ingredients WHERE fridge_id = (SELECT fridge_id FROM user_fridges WHERE user_id = :user_id) AND ingredient_id IN (SELECT ingredient_id FROM ingredients WHERE name = :ingredient_name) LIMIT 1");
     $checkStmt->bindParam(':user_id', $user_id);
     $checkStmt->bindParam(':ingredient_name', $ingredient_id);
-
 
     if (!$checkStmt->execute()) {
         // Ошибка выполнения запроса
@@ -36,9 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-// Инициализация $fridgeStmt перед использованием
+    // Инициализация $fridgeStmt перед использованием
     $fridgeStmt = null;
-// Проверка, существует ли ингредиент в базе
+    // Проверка, существует ли ингредиент в базе
     $stmt = $db->prepare("SELECT * FROM ingredients WHERE name = :ingredient_name");
     $stmt->bindParam(':ingredient_name', $ingredient_id);
     $stmt->execute();
@@ -48,27 +46,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $ingredient_data = $stmt->fetch(PDO::FETCH_ASSOC);
         $ingredient_id = $ingredient_data['ingredient_id'];
 
-        // Получение количества из POST-запроса
-        $quantity = $_POST['quantity'];
-
         // Инициализация $fridgeStmt перед использованием
-        $fridgeStmt = $db->prepare("INSERT INTO fridge_ingredients (fridge_id, ingredient_id, quantity) VALUES ((SELECT fridge_id FROM user_fridges WHERE user_id = :user_id), :ingredient_id, :quantity) ON CONFLICT (fridge_id, ingredient_id) DO UPDATE SET quantity = fridge_ingredients.quantity + :quantity");
+        $fridgeStmt = $db->prepare("INSERT INTO fridge_ingredients (fridge_id, ingredient_id, quantity) VALUES ((SELECT fridge_id FROM user_fridges WHERE user_id = :user_id), :ingredient_id, 1) ON CONFLICT (fridge_id, ingredient_id) DO UPDATE SET quantity = fridge_ingredients.quantity + 1");
         $fridgeStmt->bindParam(':user_id', $user_id);
         $fridgeStmt->bindParam(':ingredient_id', $ingredient_id);
-        $fridgeStmt->bindParam(':quantity', $quantity);
     }
 
-    // Вставка ингредиента в холодильник
+// Вставка ингредиента в холодильник
     if ($fridgeStmt !== null && $fridgeStmt->execute()) {
         // Успешный сценарий
-        echo json_encode(['success' => true, 'message' => 'Ингредиент успешно добавлен в холодильник!!!', 'user_id' => $user_id, 'ingredient_id' => $ingredient_id, 'quantity' => $quantity]);
+        echo json_encode(['success' => true, 'message' => 'Ингредиент успешно добавлен в холодильник!!!', 'user_id' => $user_id, 'ingredient_id' => $ingredient_id]);
         exit();
     } else {
         // Ошибка при выполнении SQL-запроса
-        echo json_encode(['success' => false, 'message' => 'Ошибка при добавлении ингредиента в холодильник!!!', 'quantity' => $quantity]);
+        echo json_encode(['success' => false, 'message' => 'Ошибка при добавлении ингредиента в холодильник!!!']);
         exit();
     }
-
-
 }
 
