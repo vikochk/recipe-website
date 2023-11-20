@@ -1,3 +1,30 @@
+$(function() {
+    $(".autocomplete").autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: "search.php",
+                dataType: "json",
+                data: {
+                    ingredient: request.term
+                },
+                success: function(data) {
+                    response($.map(data, function(item) {
+                        return {
+                            label: item.name,
+                            value: item.name
+                        };
+                    }));
+                }
+            });
+        },
+        minLength: 2,
+        select: function(event, ui) {
+            // Заполняем скрытое поле с id выбранного ингредиента
+            $("#selected_ingredient_id").val(ui.item.label);
+        }
+    });
+});
+
 // Функция для отправки асинхронного запроса на сервер
 function searchIngredients(query) {
     const resultsContainer = document.getElementById('results');
@@ -44,10 +71,11 @@ function updateResults() {
         resultsContainer.innerHTML = '';
     }
 }
-
 // Функция для обработки выбора ингредиента из результатов поиска
 function selectIngredient(ingredientId, ingredientName) {
     document.getElementById('selected_ingredient_id').value = ingredientId;
     document.getElementById('ingredient').value = ingredientName;
     document.getElementById('results').innerHTML = ''; // Очищаем результаты поиска
 }
+
+
