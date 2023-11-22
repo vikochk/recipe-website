@@ -5,6 +5,14 @@
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipes</title>
+    <style>
+        a {
+            color: #664928; 
+        }
+        a:visited {
+            color: #664928; 
+        }
+    </style>
 </head>
 <body>
 <div class="header">
@@ -30,7 +38,7 @@
                 </table>
             </div>
             <div class="person">
-                <a href="authorization.html" title="Личный кабинет">
+                <a href="#">
                     <img src="person.png" alt="">
                 </a>
             </div>
@@ -38,15 +46,20 @@
         </div>
     </div>
     <hr color=#664928 />
-    <div class="header-title">Рецепты по ингредиентам</div>
-    <div class="header-category">
-        <a class="nav-item" href="#">Мясо и птица<br> </a>
-        <a class="nav-item" href="#">Овощи<br></a>
-        <a class="nav-item" href="#">Фрукты<br></a>
-        <a class="nav-item" href="#">Молочные продукты<br></a>
-        
-    </div>
+    <div class="header-title">Вход</div>
+    <div class="auth-item">Ещё не с нами? <a href="registration.html">Зарегистрируйтесь!</a></div>
     
+    <div class="auth-container">
+        <table class="elementsContainer">
+            <tr> <td> <input type="text" placeholder="Email" class="auth-form"> </td> </tr>
+        </table>
+    </div>
+    <div class="auth-container">
+        <table class="elementsContainer">
+            <tr> <td> <input type="password" placeholder="Пароль" class="auth-form"> </td> </tr>
+        </table>
+    </div>
+    <button class="enter-button">Войти</button>
 
 </div>
 
