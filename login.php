@@ -6,15 +6,17 @@ $data = $_POST;
 if (isset($data['do_login'])) {
     $errors = [];
 
-    $email = trim($data['email']);
-    $password = $data['password'];
+    $host = "localhost"; // Хост PostgreSQL сервера
+    $port = 5432; // Порт PostgreSQL сервера
+    $dbname = "users"; // Имя вашей базы данных
+    $user = "postgres"; // Имя пользователя PostgreSQL
+    $password = "080120"; // Пароль пользователя PostgreSQL
 
-    // Проверка подключения к базе данных
     try {
-        $db = new PDO("mysql:host={$host};dbname={$dbname}", $username, $password);
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $db = new PDO("pgsql:host=$host;port=$port;dbname=$dbname;user=$user;password=$password");
     } catch (PDOException $e) {
-        die('Ошибка подключения к базе данных: ' . $e->getMessage());
+        echo "Ошибка подключения к базе данных: " . $e->getMessage();
+        die();
     }
 
     $stmt = $db->prepare("SELECT * FROM users WHERE email = :email");
