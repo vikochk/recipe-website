@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <title>Recipes</title>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="header-line">
+                <div class="header-logo">
+                    <a href="index.html"><img src="logo.png" alt=""></a>
+                </div>
+
+                <div class="boxContainer">
+                    <table class="elementsContainer">
+                        <tr>
+                            <td>
+                                <input type="text" placeholder="Поиск по блюдам" class="search">
+                            </td>
+                            <td>
+                                <a href="#">
+                                    <img src="search.png" alt="">
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="person">
+                    <a href="authorization.html" title="Личный кабинет">
+                        <img src="person.png" alt="">
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <hr color=#664928 />
+
+    </div>
+
+    <div class="header-title">Рецепты по ингридиентам</div>
+
+    <div class="second-layer">
+        <div class="mainContainer">
+            <div class="elementsSearchContainer">
+                <div class="searchContainer">
+                    <input type="text" placeholder="Введите ингридиент..." class="searchIngredient">
+                </div>
+                <button type="button" id="addButton">
+                    <img src="add.png" alt="Добавить">
+                </button>
+                <button type="button" id="clearButton">
+                    <img src="delete.png" alt="Стереть">
+                </button>
+
+            </div>
+        </div>
+        <div id="ingredientsList" class="ingredientsList"></div>
+        <button type="button" class="findRecipeButton">Найти рецепт</button>
+
+    </div>
+    <script src="script.js"></script>
+
+</body>
+
+</html>

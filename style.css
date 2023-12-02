@@ -1,0 +1,255 @@
+body {
+    margin: 0;
+    background-image: url(background.png);
+    height: 100vh;
+    background-size: cover;
+}
+
+/* второй фон, белый */
+.second-layer {
+    background-image: url('mainground.png'); 
+    background-position: center/50px; 
+    background-repeat: no-repeat;
+    overflow: hidden;
+    margin-left: 142px;
+    height: 100vh;
+    
+}
+
+
+/* контейнер в header */
+.container {
+    margin-left: 131px;
+}
+
+/* личный кабинет */
+.person {
+    margin-left: 408px;
+}
+
+/* полоса в header */
+.header-line {
+    padding-top: 35px;
+    display: flex;
+    align-items: center;
+}
+
+/* внешний блок поиска в header */
+.boxContainer {
+    background-color: #FFFFFF;
+    margin-bottom: 5px;
+    margin-left: 80px;
+    width: 268;
+    height: 32.56;
+    border-radius: 50px;
+    border: 2px solid #D6D6D6;
+    padding: 0px 15px;
+}
+
+/* элементы блока внутреннего поиска в header */
+.elementsContainer {
+    width: 100%;
+    height: 100%;
+    vertical-align: middle;
+}
+
+/* блок внутреннего поиска в header */
+.search {
+    border: none;
+    width: 21.4;
+    height: 174.98;
+    padding: 5.58px 5px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-family: "Tahoma";
+    letter-spacing: 1px; 
+}
+
+.search:focus {
+    outline: none;
+}
+
+/* Заголовок Рецепты по ингридиентам */
+.header-title { 
+    margin-top: 34px;
+    margin-bottom: 28px;
+    color: #664928;
+    font-size: 28px;
+    font-family: "Tahoma";
+    text-align: center;
+}
+
+/* элементы контейнера поиска */
+.elementsSearchContainer {
+    display: flex;
+    margin-top: 39px;
+    margin-left: 60px;
+}
+
+/* внешний блок поиска */
+.searchContainer { 
+    margin-right: 12px;
+    border-radius: 50px; 
+    border: 2px solid #D6D6D6;
+    width: 862px;
+    height: 40px;
+}
+
+/*внутренний блок поиска */
+.searchIngredient { 
+    border: none;
+    width: 770px;
+    height: 25px;
+    margin: 7.27px 18.25px;
+    font-size: 15px;
+    font-family: "Tahoma";
+    letter-spacing: 1px;
+}
+
+.searchIngredient:focus {
+    outline: none;
+}
+
+/* кнопки добавления ингридиента и стирания строки поиска */
+#addButton,
+#clearButton {
+    background: none;
+    border: none;
+
+    cursor: pointer;
+}
+
+/* кнопка Найти рецепт */
+.findRecipeButton {
+    color: #FFFFFF;
+    background-color: #825D33;
+    width: 315px;
+    height: 43px;
+    margin-left: 395px;
+    margin-top: 10px;
+    border-radius: 50px; 
+    font-size: 16px;
+    font-weight: bold;
+    font-family: "Tahoma";
+    letter-spacing: 1px;
+    border: none;
+    cursor: pointer;
+
+}
+
+
+
+/* лист добавляемых ингридиентов */
+.ingredientsList {
+    margin-left: 63px;
+    margin-top: 15px;
+    padding: 10px;
+    color: #664928;
+    font-size: 15px;
+    font-family: "Tahoma";
+    letter-spacing: 1px;
+}
+
+/* ингридиенты */
+.ingredient-item {
+    padding: 5px; 
+}
+
+/* кнопка крестика для удаления ингридиента */
+.delete-button {
+    cursor: pointer;
+    position: absolute;
+    margin-left: 10px;
+}
+
+.ingredient-item:hover .delete-button {
+    opacity: 1; /* Показать при наведении на ингредиент */
+}
+
+/*
+    Авторизация, регистрация: 
+*/
+.auth-item {
+    color: #664928;
+    margin-top: 27px;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-family: "Tahoma";
+    padding-left: 20px;
+    letter-spacing: 1px;
+}
+
+.wrapper {
+    margin-left: 404px;
+}
+
+.wrapper-reg {
+    margin-left: 404px;
+    margin-top: 20px;
+}
+
+.auth-container {
+    background-color: #FFFFFF;
+    display: block;
+    margin-bottom: 15px;
+    width: 332px;
+    height: 44px;
+    border-radius: 10px;
+    border: 2px solid #D6D6D6;
+    padding: 0px 15px;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+.auth-form {
+    border: none;
+    width: 320px;
+    height: 30px;
+    padding: 5.58px 5px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: "Tahoma";
+}
+
+.auth-form:focus {
+    outline: none;
+}
+
+.auth-form-password:focus {
+    outline: none;
+}
+
+.enter-button {
+    display: block;
+    margin-top: 28px;
+    width: 362px;
+    height: 44px;
+    padding: 10px 20px; 
+    background-color: #825D33;
+    color: #fff; 
+    font-size: 20px;
+    font-weight: bold;
+    font-family: "Tahoma";
+    border: none; 
+    border-radius: 30px; 
+    cursor: pointer; 
+    box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header-title-reg {
+    color: #664928;
+    margin-top: 34px;
+    margin-bottom: 28px;
+    margin-left: 625px;
+    font-size: 28px;
+    font-family: "Tahoma";
+    letter-spacing: 2px;
+}
+
+.header-title-auth {
+    color: #664928;
+    margin-top: 34px;
+    margin-bottom: 28px;
+    margin-left: 676px;
+    font-size: 28px;
+    font-family: "Tahoma";
+}
