@@ -1,5 +1,5 @@
 <?php
-$host = "batyr.db.elephantsql.com";
+$host = "localhost";
 $port = 5432; // Порт PostgreSQL сервера
 $dbname = "users"; // Имя вашей базы данных
 $user = "postgres"; // Имя пользователя PostgreSQL
