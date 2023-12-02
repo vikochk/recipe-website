@@ -6,7 +6,7 @@ $data = $_POST;
 if (isset($data['do_login'])) {
     $errors = [];
 
-    $host = "localhost"; // Хост PostgreSQL сервера
+    $host = "batyr.db.elephantsql.com"; // Хост PostgreSQL сервера
     $port = 5432; // Порт PostgreSQL сервера
     $dbname = "users"; // Имя вашей базы данных
     $user = "postgres"; // Имя пользователя PostgreSQL
@@ -51,15 +51,3 @@ if (isset($data['do_login'])) {
 }
 ?>
 
-<form method="POST" action="login.php">
-    <!-- Ваши поля для ввода данных -->
-    <p><strong>Ваша электронная почта</strong>:</p>
-    <input type="text" name="email" value="<?= isset($data['email']) ? htmlspecialchars($data['email']) : ''; ?>">
-    </p>
-    <p><strong>Ваш пароль</strong>:</p>
-    <input type="password" name="password">
-    </p>
-    <p>
-        <button type="submit" name="do_login">Войти</button>
-    </p>
-</form>
