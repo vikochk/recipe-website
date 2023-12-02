@@ -12,8 +12,11 @@ if (isset($data['do_login'])) {
     $user = "postgres"; // Имя пользователя PostgreSQL
     $password = "080120"; // Пароль пользователя PostgreSQL
 
+    error_log("Точка 1"); // Первая точка для отладки
+
     try {
         $db = new PDO("pgsql:host=$host;port=$port;dbname=$dbname;user=$user;password=$password");
+        error_log("Соединение с базой данных успешно установлено"); // Точка для отладки
     } catch (PDOException $e) {
         echo "Ошибка подключения к базе данных: " . $e->getMessage();
         die();
@@ -23,6 +26,8 @@ if (isset($data['do_login'])) {
     $stmt->bindParam(':email', $email);
     $stmt->execute();
     $user = $stmt->fetch();
+
+    error_log("Точка 2"); // Вторая точка для отладки
 
     if ($user) {
         if (password_verify($password, $user['password'])) {
@@ -50,4 +55,3 @@ if (isset($data['do_login'])) {
     }
 }
 ?>
-
