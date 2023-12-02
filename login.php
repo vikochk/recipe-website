@@ -6,7 +6,7 @@ $data = $_POST;
 if (isset($data['do_login'])) {
     $errors = [];
 
-    $host = "batyr.db.elephantsql.com"; // Хост PostgreSQL сервера
+    $host = "localhost"; // Хост PostgreSQL сервера
     $port = 5432; // Порт PostgreSQL сервера
     $dbname = "users"; // Имя вашей базы данных
     $user = "postgres"; // Имя пользователя PostgreSQL
