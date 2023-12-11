@@ -16,67 +16,116 @@
         a:visited {
             color: #664928;
         }
+
+        .auth-item {
+            color: #664928;
+            margin-top: 27px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-family: "Tahoma";
+            padding-left: 20px;
+            letter-spacing: 1px;
+        }
+
+        .error-message-container {
+            text-align: center;
+            color: #664928;
+            font-size: 18px;
+            font-family: "Tahoma";
+            background-color: #FFE3D3;
+            border: 2px solid #FFB38C;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 332px;
+            margin-top: 34px;
+            margin-bottom: 28px;
+            margin-left: 405px;
+            box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
+            display: none; /* Скрываем окно при загрузке страницы */
+        }
     </style>
+
+
 </head>
 
 <body>
-    <div class="header">
-        <div class="container">
-            <div class="header-line">
-                <div class="header-logo">
-                    <a href="index.html"><img src="logo.png" alt=""></a>
-                </div>
-
-                <div class="boxContainer">
-                    <table class="elementsContainer">
-                        <tr>
-                            <td>
-                                <input type="text" placeholder="Поиск по блюдам" class="search">
-                            </td>
-                            <td>
-                                <a href="#">
-                                    <img src="search.png" alt="">
-                                </a>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="person">
-                    <a href="#">
-                        <img src="person.png" alt="">
-                    </a>
-                </div>
-
+<div class="header">
+    <div class="container">
+        <div class="header-line">
+            <div class="header-logo">
+                <a href="index.html"><img src="logo.png" alt=""></a>
             </div>
-        </div>
-        <hr color=#664928 />
-        <div class="header-title-auth">Вход</div>
-        <div class="second-layer">
 
-            <div class="wrapper">
-                <div class="auth-item">Ещё не с нами? <a href="registration.html">Зарегистрируйтесь!</a></div>
-
-                <form method="post" action="login.php">
-                    <div class="auth-container">
-                        <table class="elementsContainer">
-                            <tr>
-                                <td> <input type="text" name="email" placeholder="Email" class="auth-form"> </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="auth-container">
-                        <table class="elementsContainer">
-                            <tr>
-                                <td> <input type="password" name="password" placeholder="Пароль" class="auth-form"> </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <button type="submit" class="enter-button">Войти</button>
-                </form>
+            <div class="boxContainer">
+                <table class="elementsContainer">
+                    <tr>
+                        <td>
+                            <input type="text" placeholder="Поиск по блюдам" class="search">
+                        </td>
+                        <td>
+                            <a href="#">
+                                <img src="search.png" alt="">
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="person">
+                <a href="authorization.html" title="Личный кабинет">
+                    <img src="person.png" alt="">
+                </a>
             </div>
 
         </div>
     </div>
+    <hr color=#664928 />
+    <div class="header-title-auth">Вход</div>
+    <div class="second-layer">
+        <div class="error-message-container" id="errorMessageContainer"></div> <!-- Контейнер для вывода ошибок -->
+
+        <div class="wrapper">
+            <div class="auth-item">Ещё не с нами? <a href="registration.html">Зарегистрируйтесь!</a></div>
+
+            <form id="loginForm" method="post" action="login.php">
+                <div class="auth-container">
+                    <table class="elementsContainer">
+                        <tr>
+                            <td> <input type="text" name="email" placeholder="Email" class="auth-form"> </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="auth-container">
+                    <table class="elementsContainer">
+                        <tr>
+                            <td> <input type="password" name="password" placeholder="Пароль" class="auth-form"> </td>
+                        </tr>
+                    </table>
+                </div>
+                <button type="submit" class="enter-button">Войти</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript для отображения сообщения об ошибке (если оно есть)
+        document.addEventListener("DOMContentLoaded", function () {
+            var errorMessageContainer = document.getElementById("errorMessageContainer");
+            var urlParams = new URLSearchParams(window.location.search);
+            var errorParam = urlParams.get("error");
+
+            if (errorParam) {
+                // Показываем окно с сообщением об ошибке, только если есть сообщение
+                errorMessageContainer.style.display = "block";
+                // Разбиваем строку ошибок на массив и выбираем первую ошибку
+                var errors = errorParam.split('<br>');
+                var firstError = errors[0];
+
+                errorMessageContainer.innerText = firstError;
+            }
+        });
+    </script>
+</div>
+</div>
 </body>
 
 </html>
