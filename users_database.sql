@@ -17,13 +17,14 @@ CREATE TABLE IF NOT EXISTS public.users (
     name VARCHAR(100) NOT NULL
 );
 
+/* Кто запускал этот файлик, раскомментируйте DROP TABLE в all_ingredients.sql
 -- Ингредиенты, которые можно добавить
 CREATE TABLE IF NOT EXISTS public.ingredients (
     ingredient_id SERIAL PRIMARY KEY,
     name VARCHAR(255) UNIQUE NOT NULL,
     category VARCHAR(100)
 );
-
+*/
 -- Связка между users и холодильников
 CREATE TABLE IF NOT EXISTS public.user_fridges (
     fridge_id SERIAL PRIMARY KEY,
