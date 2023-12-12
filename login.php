@@ -1,20 +1,52 @@
 <?php
-// Подключение к базе данных или другие необходимые настройки
+session_start();
+$host = "localhost";
+$port = 5432;
+$dbname = "users";
+$user = "postgres";
+$password = "080120";
 
-// Проверка, была ли отправлена форма
+try {
+    $db = new PDO("pgsql:host=$host;port=$port;dbname=$dbname;user=$user;password=$password");
+} catch (PDOException $e) {
+    echo "Ошибка подключения к базе данных: " . $e->getMessage();
+    die();
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Получение введенных данных из формы
-    $email = $_POST["email"];
-    $password = $_POST["password"];
+    $errors = array();
 
-    // Проверка логина и пароля (пример, требуется адаптация)
-    if ($email == "ваш_желаемый_логин" && $password == "ваш_желаемый_пароль") {
-        // Вход успешен
-        echo "Вход выполнен успешно!";
-        // Здесь вы можете выполнить необходимые действия после успешного входа
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+
+    $stmt = $db->prepare("SELECT * FROM users WHERE email = :email");
+    $stmt->bindParam(':email', $email);
+    $stmt->execute();
+    $user = $stmt->fetch();
+
+    if ($user) {
+        if (password_verify($password, $user['password'])) {
+            // Получаем user_id для данного пользователя
+            $user_id = $user['user_id'];
+
+            // Установка user_id в сессии
+            $_SESSION['user_id'] = $user_id;
+
+            // Перенаправление на ingredients.php
+            header('Location: ingredients.php');
+            exit();
+        } else {
+            $errors[] = 'Данные введены неверно';
+        }
     } else {
-        // Неверные логин или пароль
-        echo "Неверный логин или пароль.";
+        $errors[] = 'Пользователь с таким email не зарегистрирован';
+    }
+
+    if (!empty($errors)) {
+        $errorMessage = implode('<br>', $errors);
+        header("Location: authorization.html?error=" . urlencode($errorMessage));
+        exit();
     }
 }
 ?>
+
