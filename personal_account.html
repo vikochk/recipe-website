@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <title>Recipes</title>
+    <style>
+        /* Личный кабинет: */
+        /* картинка юзера с котиком поваренком */
+        #cookCat {
+            position: absolute;
+            top: 215px;
+            left: 183px;
+            width: 89px; 
+            height: 89px; 
+        }
+
+        /* поле для имени и почты, которые описаны ниже */
+        .username-field-lk {
+            width: 157px;
+            height: 28px;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        /* имя пользователя (должно изменяться из бд) */
+        .username-lk {
+            position: absolute;
+            top: 232px;
+            left: 281px;
+            font-family: Tahoma, sans-serif;
+            color: #553D21;
+            font-size: 28px;
+        }
+
+        /* почта пользователя (должна изменяться из бд) */
+        .email-lk {
+            position: absolute;
+            top: 266px;
+            left: 281px;
+            font-family: Tahoma, sans-serif;
+            color: #553D21;
+            font-size: 18px;
+        }
+
+        /* полоса в личном кабинете */
+        .line-lk {
+            position: absolute;
+            top: 323px;
+            left: 141px;
+            width: 1157px;
+            height: 1px;
+            background-color: #553D21;
+        }
+
+        /* кнопка настроек профиля */
+        .button-settings-lk {
+            position: absolute;
+            top: 235px;
+            left: 965px;
+            width: 287px;
+            height: 39px;
+            background-color: #553D21;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            border-radius: 7px;
+        }
+
+        /* иконка для настроек в лк */
+        #settingsIcon {
+            position: absolute;
+            top: 5px;
+            left: 18px;
+            width: 30px;
+            height: 30px;
+        }
+
+        /* текст "настройки профиля" */
+        .button-settings-lk-text {
+            position: absolute;
+            top: 6px;
+            left: 58px;
+            color: #FFFFFF;
+            font-family: Tahoma, sans-serif;
+            font-size: 22px;
+        }
+
+        .chicken-leg {
+            position: absolute;
+            left: 688px;
+            top: 351px;
+            width: 502px;
+            height: 511px;
+            opacity: 0.1; /* 10% видимость */
+        }
+
+        /* текст "мой холодильник" */
+        .fridge-text-lk {
+            position: absolute;
+            top: 369px;
+            left: 183px;
+            color: #553D21;
+            font-family: Tahoma, sans-serif;
+            font-size: 30px;
+        }
+
+        /* рамка для продуктов в холодильнике */
+        .frame-fridge {
+            position: absolute;
+            top: 418px;
+            left: 184px;
+            width: 322px;
+            height: 323px;
+            border: 1px solid #553D21;
+            border-radius: 7px;
+        }
+
+        /* элементы контейнера поиска */
+        .elementsSearchContainer-lk {
+            display: flex;
+            margin-top: 39px;
+            margin-left: 60px;
+        }
+
+        /* внешний блок поиска */
+        .searchContainer-lk { 
+            position: absolute;
+            top: 690px;
+            left: 197px;
+            width: 202px;
+            height: 40px;
+            border: 1px solid #553D21;
+            border-radius: 10px;
+            padding: 0 10px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+            color: #553D21;
+            font-family: Tahoma, sans-serif;
+            font-size: 15px;
+            line-height: 26px; /* Центрирование текста вертикально */
+            background-color: #FFFFFF;
+        }
+
+        /* внутренний блок поиска */
+        .searchIngredient-lk { 
+            border: none;
+            position: absolute;
+            top: 7px;
+            left: 6.7px;
+            color: #553D21;
+            font-family: Tahoma, sans-serif;
+            font-size: 15px;
+            line-height: 26px;
+            transition: all 0.3s ease-out; /* Плавный переход для надписи */
+        }
+
+        .searchIngredient-lk:focus {
+            outline: none;
+        }
+
+        /* кнопки добавления ингридиента и стирания строки поиска */
+        #addButton-lk,
+        #clearButton-lk {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        #addButton-lk {
+            position: absolute;
+            top: 690px;
+            left: 418px;
+            cursor: pointer;
+        }
+        #clearButton-lk {
+            position: absolute;
+            top: 690px;
+            left: 458px;
+            cursor: pointer;
+        }
+
+        /* кнопка Найти рецепт */
+        .findRecipeButton-lk {
+            position: absolute;
+            top: 763px;
+            left: 184px;
+            width: 322px;
+            height: 43px;
+            color: #FFFFFF;
+            background-color: #825D33;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+            border: none;
+            border-radius: 30px;
+            padding: 0;
+            font-size: 16px;
+            font-weight: bold;
+            font-family: "Tahoma";
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* лист добавляемых ингридиентов */
+        .ingredientsList-lk {
+            position: absolute;
+            top: 418px;
+            left: 184px;
+            width: 300px;
+            height: 242px;
+            overflow-y: auto; /* Полосы прокрутки при необходимости */
+            padding: 10px;
+        }
+
+        /* ингридиенты */
+        .ingredient-item-lk {
+            padding: 5px; 
+            color: #553D21;
+            font-family: Tahoma, sans-serif;
+            font-size: 15px;
+            line-height: 26px;
+        }
+
+        /* кнопка крестика для удаления ингридиента */
+        .delete-button-lk {
+            cursor: pointer;
+            position: absolute;
+            margin-left: 10px;
+        }
+
+        .ingredient-item-lk:hover .delete-button-lk {
+            opacity: 1; /* Показать при наведении на ингредиент */
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="header">
+    <div class="container">
+        <div class="header-line">
+            <div class="header-logo">
+                <a href="index.html"><img src="logo.png" alt=""></a>
+            </div>
+
+            <div class="boxContainer">
+                <table class="elementsContainer">
+                    <tr>
+                        <td>
+                            <input type="text" placeholder="Поиск по блюдам" class="search">
+                        </td>
+                        <td>
+                            <a href="#">
+                                <img src="search.png" alt="">
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="person">
+                <a href="authorization.html" title="Личный кабинет">
+                    <img src="person.png" alt="">
+                </a>
+            </div>
+
+        </div>
+    </div>
+    <hr color=#664928 />
+    <div class="header-title-reg">Личный кабинет</div>
+    <div class="second-layer">
+        <img src="cook-cat.png" alt="Cook Cat" id="cookCat">
+        <div class="username-field-lk">
+            <div class="username-lk">Username</div>
+            <div class="email-lk">mail@mail.ru</div>
+        </div>
+
+        <div class="line-lk"></div>
+
+        <button class="button-settings-lk">
+            <img src="settings.png" alt="Settings" id="settingsIcon">
+            <div class="button-settings-lk-text">Настройки профиля</div>
+        </button>
+
+        <img src="chicken-leg.png" alt="Куриная ножка" class="chicken-leg">
+
+        <div class="fridge-text-lk">Мой холодильник</div>
+        <div class="frame-fridge"></div>
+
+        <div class="mainContainer">
+            <div class="elementsSearchContainer-lk">
+                <div class="searchContainer-lk">
+                    <input type="text" placeholder="Введите ингредиент..." class="searchIngredient-lk">
+                </div>
+                <button type="button" id="addButton-lk">
+                    <img src="add.png" alt="Добавить">
+                </button>
+                <button type="button" id="clearButton-lk">
+                    <img src="delete.png" alt="Стереть">
+                </button>
+            </div>
+        </div>
+        <div id="ingredientsList-lk" class="ingredientsList-lk"></div>
+        <button type="button" class="findRecipeButton-lk">Найти рецепт</button>
+    
+    
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var clearButton = document.getElementById('clearButton-lk');
+            var addButton = document.getElementById('addButton-lk');
+            var ingredientsList = document.getElementById('ingredientsList-lk');
+
+            if (clearButton) {
+                clearButton.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    var searchIngredient = document.querySelector('.searchIngredient-lk');
+
+                    if (searchIngredient) {
+                        searchIngredient.value = '';
+                    }
+                });
+            }
+
+            if (addButton) {
+                addButton.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    var searchIngredient = document.querySelector('.searchIngredient-lk').value;
+
+                    if (searchIngredient) {
+                        // Создаем новый элемент для добавленного ингредиента
+                        var newIngredient = document.createElement('div');
+                        newIngredient.className = 'ingredient-item-lk';
+
+                        var ingredientText = document.createElement('span');
+                        ingredientText.textContent = searchIngredient;
+
+                        var deleteButton = document.createElement('span');
+                        deleteButton.className = 'delete-button-lk';
+                        deleteButton.textContent = '✖';
+
+                        deleteButton.addEventListener('click', function () {
+                            ingredientsList.removeChild(newIngredient);
+                        });
+
+                        newIngredient.appendChild(ingredientText);
+                        newIngredient.appendChild(deleteButton);
+
+                        // Добавляем новый ингредиент в список
+                        ingredientsList.appendChild(newIngredient);
+
+                        // Очищаем строку поиска
+                        document.querySelector('.searchIngredient-lk').value = '';
+                    }
+                });
+            }
+        });
+
+    </script>
+</body>
+
+</html>
