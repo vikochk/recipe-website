@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> -->
     <title>Recipes</title>
 </head>
 
@@ -22,10 +23,10 @@
                     <table class="elementsContainer">
                         <tr>
                             <td>
-                                <input type="text" placeholder="Поиск по блюдам" class="search">
+                                <input type="text" id="dishSearchInput"  placeholder="Поиск по блюдам" class="search">
                             </td>
                             <td>
-                                <a href="#">
+                                <a href="#" title="Найденные рецепты" onclick="searchByDish()">
                                     <img src="search.png" alt="">
                                 </a>
                             </td>
@@ -62,7 +63,7 @@
             </div>
         </div>
         <div id="ingredientsList" class="ingredientsList"></div>
-        <button type="button" class="findRecipeButton">Найти рецепт</button>
+        <button type="button" class="findRecipeButton" onclick="searchRecipes()">Найти рецепт</button>
 
     </div>
     <script src="script.js"></script>

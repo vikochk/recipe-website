@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+    <title>Recipes</title>
+    <style>
+        .second-layer-recipes {
+            background-image: url('mainground.png');
+            background-position: center/50px;
+            background-repeat: no-repeat;
+            overflow: hidden;
+            margin-left: 142px;
+            height: 70vh;
+            border-radius: 10px;
+        }
+
+        .scroll-container {
+            overflow-y: auto;
+            margin-right: 244px;
+            /* Внутренняя полоса прокрутки */
+            height: 97%;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            ;
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        .scroll-container::-webkit-scrollbar-thumb {
+            background-color: #553D21;
+            /* Цвет ползунка */
+            border-radius: 10px;
+        }
+
+        .scroll-container::-webkit-scrollbar-track {
+            background-color: #FFF;
+        }
+
+        /* .recipe-item {
+            float: left;
+            margin: 20px;
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%
+        }
+
+        .row-container {
+            margin-bottom: 20px;
+            overflow: hidden;
+        } */
+
+        .row-container {
+
+            display: flex;
+            /* Используем flex-контейнер для распределения элементов внутри строки */
+            /* justify-content: space-between; */
+            /* Равномерно распределяем элементы по строке */
+            margin-bottom: 0px;
+            /* align-items: stretch; */
+
+            padding: 15px;
+            align-items: flex-start;
+            /* Выравниваем элементы в начале контейнера */
+            flex-wrap: wrap;
+            gap: 40px; 
+            /* Добавляем отступ между строками, если нужно */
+        }
+
+        .recipe-item {
+            border-radius: 10px;
+            width: 30%;
+            height: 250px;
+            /* Задайте фиксированную высоту для ограничения размеров изображений */
+            box-sizing: border-box;
+            margin: 0;
+            /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+            overflow: hidden;
+            padding-bottom: 90px;
+            /* padding: 20px; */
+            /* Обрезаем изображения, которые не вписываются в ограниченную высоту */
+            /* display: flex;
+            flex-direction: column; */
+        }
+
+        .recipe-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Масштабируем изображение, чтобы оно полностью заполнило контейнер */
+        }
+
+        .recipe-item h3,
+        .recipe-item p {
+            color: #664928;
+            margin: 5px 0;
+
+        }
+
+        a {
+            color: #664928;
+            text-decoration: none;
+            /* Убираем подчеркивание для всех ссылок */
+        }
+
+        .wrapper-search {
+            /* Другие стили для блока wrapper-search, если необходимо */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="header-line">
+                <div class="header-logo">
+                    <a href="index.html"><img src="logo.png" alt=""></a>
+                </div>
+
+                <div class="boxContainer">
+                    <table class="elementsContainer">
+                        <tr>
+                            <td>
+                                <input type="text" id="dishSearchInput"  placeholder="Поиск по блюдам" class="search">
+                            </td>
+                            <td>
+                                <a href="#" title="Найденные рецепты" onclick="searchByDish()">
+                                    <img src="search.png" alt="">
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="person">
+                    <a href="authorization.html" title="Личный кабинет">
+                        <img src="person.png" alt="">
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <hr color=#664928 />
+
+        <div class="header-title-reg">Найденные рецеты</div>
+        <div class="second-layer-recipes">
+            <div class="scroll-container">
+                <div class="wrapper-search">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Получаем параметры из URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const ingredients = urlParams.get('ingredients');
+            const dish = urlParams.get('tag');
+
+
+            if (ingredients || dish) {
+
+                // Извлекаем результаты из sessionStorage
+                const searchResults = sessionStorage.getItem('searchResults');
+
+                if (searchResults) {
+                    // Преобразуем строку JSON в объект
+                    const recipes = JSON.parse(searchResults);
+
+                    // Здесь вы можете использовать данные рецептов для отображения результатов
+                    displayRecipes(recipes);
+                }
+            } else {
+                console.error('Отсутствуют параметры ингредиентов в URL.');
+            }
+
+
+        });
+        function displayRecipes(recipes) {
+            const recipeContainer = document.querySelector('.wrapper-search');
+
+            if (!recipes || recipes.error) {
+                recipeContainer.innerHTML = '<p>Нет рецептов с такими ингредиентами.</p>';
+            } else {
+
+                let rowContainer; // Добавляем переменную для хранения контейнера строки
+
+                recipes.forEach((recipe, index) => {
+
+                    if (recipe.photo_link !== null) {
+
+                        // console.log('Ссылка на изображение:', recipe.photo_link);
+
+                        if (index % 3 === 0) {
+                            // Создаем новый контейнер для новой строки
+                            rowContainer = document.createElement('div');
+                            rowContainer.classList.add('row-container');
+                            recipeContainer.appendChild(rowContainer);
+                        }
+
+                        const recipeItem = document.createElement('div');
+                        recipeItem.classList.add('recipe-item');
+                        const recipeLink = document.createElement('a');
+                        console.log('Recipe ID:', recipe.recipe_id);
+
+                        recipeLink.href = 'recipies_output.php?recipe_id=' + encodeURIComponent(recipe.recipe_id);
+
+                        // recipeLink.href = 'recipies_output.php?recipeId=' + recipe.recipe_id;
+
+                        recipeLink.innerHTML = `
+                <img src="${recipe.photo_link}" alt="Recipe Image ${recipe.recipe_name}">
+                <h3>${recipe.recipe_name}</h3>
+                <p>Время приготовления: ${recipe.cook_time}</p>
+                <hr>
+                `;
+
+                        recipeItem.appendChild(recipeLink);
+
+                        rowContainer.appendChild(recipeItem);
+                    } else {
+                        console.error('Отсутствует ссылка на изображение для рецепта:', recipe);
+                    }
+
+                });
+
+            }
+        }
+
+
+    </script>
+    <script src="script.js"></script>
+
+</body>
+
+</html>

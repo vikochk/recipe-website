@@ -1,23 +1,23 @@
 <?php
-require "db.php";
+session_start();
+$host = "localhost";
+$port = 5432;
+$dbname = "users";
+$user = "postgres";
+$password = "080120";
 
-$data = $_POST;
+try {
+    $db = new PDO("pgsql:host=$host;port=$port;dbname=$dbname;user=$user;password=$password");
+} catch (PDOException $e) {
+    echo "Ошибка подключения к базе данных: " . $e->getMessage();
+    die();
+}
 
-if (isset($data['do_login'])) {
-    $errors = [];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $errors = array();
 
-    $host = "localhost"; // Хост PostgreSQL сервера
-    $port = 5432; // Порт PostgreSQL сервера
-    $dbname = "users"; // Имя вашей базы данных
-    $user = "postgres"; // Имя пользователя PostgreSQL
-    $password = "080120"; // Пароль пользователя PostgreSQL
-
-    try {
-        $db = new PDO("pgsql:host=$host;port=$port;dbname=$dbname;user=$user;password=$password");
-    } catch (PDOException $e) {
-        echo "Ошибка подключения к базе данных: " . $e->getMessage();
-        die();
-    }
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
 
     $stmt = $db->prepare("SELECT * FROM users WHERE email = :email");
     $stmt->bindParam(':email', $email);
@@ -26,18 +26,15 @@ if (isset($data['do_login'])) {
 
     if ($user) {
         if (password_verify($password, $user['password'])) {
-            // Пароль верный
+            // Получаем user_id для данного пользователя
+            $user_id = $user['user_id'];
 
-            // Начало сессии с использованием безопасной случайной строки
-            session_start([
-                'cookie_lifetime' => 86400,
-                'read_and_close' => true,
-            ]);
-            $_SESSION['user_id'] = $user['user_id'];
+            // Установка user_id в сессии
+            $_SESSION['user_id'] = $user_id;
 
-            // Перенаправление на страницу поиска ингредиентов
+            // Перенаправление на ingredients.php
             header('Location: ingredients.php');
-            exit(); // Важно прервать выполнение кода после перенаправления
+            exit();
         } else {
             $errors[] = 'Данные введены неверно';
         }
@@ -46,20 +43,9 @@ if (isset($data['do_login'])) {
     }
 
     if (!empty($errors)) {
-        echo '<div style="color: red;">' . implode('<br>', $errors) . '</div><hr>';
+        $errorMessage = implode('<br>', $errors);
+        header("Location: authorization.html?error=" . urlencode($errorMessage));
+        exit();
     }
 }
 ?>
-
-<form method="POST" action="login.php">
-    <!-- Ваши поля для ввода данных -->
-    <p><strong>Ваша электронная почта</strong>:</p>
-    <input type="text" name="email" value="<?= isset($data['email']) ? htmlspecialchars($data['email']) : ''; ?>">
-    </p>
-    <p><strong>Ваш пароль</strong>:</p>
-    <input type="password" name="password">
-    </p>
-    <p>
-        <button type="submit" name="do_login">Войти</button>
-    </p>
-</form>
