@@ -31,15 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tag'])) {
         $stmt->execute($params);
         $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // $tagQuery = $_POST['tag'];
-        // $dishQuery = $requestData['tag'];
-        // $dishQuery = json_decode($_POST['tag']);
-
-        // $sql = "SELECT * FROM recipies WHERE LOWER(recipe_name) = LOWER(?) ORDER BY recipe_name";
-        // $stmt = $pdo->prepare($sql);
-        // $stmt->execute([$dishQuery]);
-        // $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         $responseData = [];
 
         if (!empty($recipes)) {
@@ -58,6 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tag'])) {
         echo json_encode($responseData);
     } catch (Exception $e) {
         header('Content-Type: application/json');
-        echo json_encode(['error' => 'Произошла ошибка при обработке запроса: ' . $e->getMessage()]);
+        echo json_encode(['error' => 'Произошла ошибка при обработке запроса поиска по блюдам: ' . $e->getMessage()]);
     }
 }

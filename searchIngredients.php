@@ -21,56 +21,46 @@ try {
 // Обработка запроса поиска
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ingredients'])) {
 
-
-
-    // Вывод результатов
-    // if (!empty($recipes)) {
-    //     foreach ($recipes as $recipe) {
-    //         echo "<div class='recipe-item'>";
-    //         echo "<img src='{$recipe['photo_link']}' alt='Recipe Image'>";
-    //         echo "<h3>{$recipe['recipe_name']}</h3>";
-    //         echo "<p>Время приготовления: {$recipe['cook_time']}</p>";
-    //         echo "<hr>";
-    //         echo "</div>";
-    //     }
-    // } else {
-    //     echo "<p>Нет рецептов с такими ингредиентами.</p>";
-    // }
-
     try {
-        // Выводим отладочное сообщение
-        // error_log('Ингредиенты для поиска: ' . print_r($searchIngredients, true));
-        //
         $searchIngredients = json_decode($_POST['ingredients'], true);
 
-        if (!is_array($searchIngredients)) {
-            $searchIngredients = [];
+        if (!is_array($searchIngredients) || empty($searchIngredients)) {
+            header('Content-Type: application/json');
+            echo json_encode(['error' => 'Некорректные данные ингредиентов']);
+            die();
+        }
+
+        // Исключаем "✖" из списка ингредиентов
+        $searchIngredients = array_filter($searchIngredients, function ($ingredient) {
+            return $ingredient !== '✖';
+        });
+
+        if (empty($searchIngredients)) {
+            header('Content-Type: application/json');
+            echo json_encode(['error' => 'Нет корректных ингредиентов для поиска']);
+            die();
         }
 
         // Формируем строку для использования в предложении IN в SQL-запросе
-        $ingredientPlaceholders = rtrim(str_repeat('?,', count($searchIngredients)), ',');
-
-        // SQL-запрос для поиска рецептов по ингредиентам
-        // $sql = "SELECT DISTINCT r.recipe_id, r.recipe_name, r.photo_link, r.cook_time, r.instruction, r.tag
-        //     FROM recipies r
-        //     JOIN recipe_ingredients ri ON r.recipe_id = ri.recipe_id
-        //     JOIN ingredients i ON ri.ingredient_id = i.ingredient_id
-        //     WHERE LOWER(i.ingredient_name) IN (LOWER(" . implode('), LOWER(', array_fill(0, count($searchIngredients), '?')) . "))
-        //     ORDER BY r.recipe_name";
+        $ingredientPlaceholders = implode(',', array_fill(0, count($searchIngredients), '?'));
 
         $sql = "SELECT DISTINCT r.recipe_id, r.recipe_name, r.photo_link, r.cook_time, r.instruction, r.tag
         FROM recipies r
         JOIN recipe_ingredients ri ON r.recipe_id = ri.recipe_id
         JOIN ingredients i ON ri.ingredient_id = i.ingredient_id
         WHERE LOWER(i.ingredient_name) IN (" . implode(', ', array_fill(0, count($searchIngredients), '?')) . ")
-        ORDER BY r.recipe_name";
+        GROUP BY r.recipe_id, r.recipe_name, r.photo_link, r.cook_time, r.instruction, r.tag
+        HAVING COUNT(DISTINCT i.ingredient_name) = ?";
 
+        $params = array_merge(array_map('strtolower', $searchIngredients), [count($searchIngredients)]);
 
         $stmt = $pdo->prepare($sql);
-        $stmt->execute($searchIngredients);
+        $stmt->execute($params);
         $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        header('Content-Type: application/json');
         error_log('Результат SQL-запроса: ' . print_r($recipes, true));
-        // Вывод результатов
+
         $responseData = [];
 
         if (!empty($recipes)) {
@@ -88,22 +78,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ingredients'])) {
 
         // Устанавливаем заголовок для ответа, указывая, что это JSON
         header('Content-Type: application/json');
-        // $logData = '';
-
-        // foreach ($recipes as $recipe) {
-        //     $logData .= "Recipe: " . print_r($recipe, true) . "\n";
-        // }
-
-        // // Запись в файл
-        // file_put_contents('file.log', $logData, FILE_APPEND);
-
-
-        // Возвращение данных в виде JSON
-        // Выводим данные в формате JSON
         echo json_encode($responseData);
     } catch (Exception $e) {
         // Если произошла ошибка, возвращаем JSON с информацией об ошибке
         header('Content-Type: application/json');
-        echo json_encode(['error' => 'Произошла ошибка при обработке запроса.']);
+        echo json_encode(['error' => 'Ингредиенты Произошла ошибка при обработке запроса поиска по ингредиентам.', 'details' => $e->getMessage()]);
+        // echo json_encode(['error' => 'Ингредиенты Произошла ошибка при обработке запроса поиска по ингредиентам.']);
     }
 }
